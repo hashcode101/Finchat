@@ -2,6 +2,21 @@ import { z } from "zod";
 import { AccountType } from "@/types/account";
 import { TransactionType, RecurringInterval } from "@/types/transaction";
 
+// Project name validation schema
+// Requirements:
+// - Up to 100 characters long
+// - Must be lowercase
+// - Can only include letters, digits, and underscores
+// - Cannot start with a digit
+export const projectNameSchema = z
+  .string()
+  .min(1, "Project name is required")
+  .max(100, "Project name must be at most 100 characters")
+  .toLowerCase()
+  .refine((val) => /^[a-z_][a-z0-9_]*$/.test(val), {
+    message: "Project name must start with a letter or underscore, and can only contain lowercase letters, digits, and underscores",
+  });
+
 export const accountSchema = z.object({
   name: z.string().min(1, "Name is required"),
   type: z.nativeEnum(AccountType),
